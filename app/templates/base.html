@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kevin Hart App - {% block title %}{% endblock title %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    img.logo {
+      margin-left: 25px;
+      width: 100px;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body>
+<h1>Kevin Hart App
+<img src="{{ url_for('static', filename='kevin hart cutout.png') }}" alt="Kevin Hart Logo" class="logo">
+</h1>
+
+{% include("_navigation.html") %}
+<section>
+  <header>
+    {% block header %}{% endblock header %}
+  </header>
+  <main>
+    {% block content %}<p>No messages.</p>{% endblock content %}
+  <main>
+</section>
+</body>
+</html>

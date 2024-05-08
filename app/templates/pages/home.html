@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h2>{% block title %}Kevin Hart's Keys to Success | Joe Rogan {% endblock title %}</h2>
+{% endblock header %}
+
+
+{% block content %}
+<p>
+  Find the YouTube video <a href="https://youtu.be/QiqYXEyU5I8?t=494" target="_blank">here</a>
+</p>
+
+    <video width="640" height="360" controls>
+      <source src="/static/kh_trimmed.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <p style="text-align: left;">
+    Joe: <i>"How do you write a book like this? Do you write out in essays? Do you have bullets points that you think about?"</i>
+    </p>   
+    <p style="text-align: left;">
+    Kevin: <i>"It's all <b>voice notes</b> and <b>transcripts</b>. You don't have the time to sit and actually write. Just speak it"</i>
+    </p>
+    <br>
+    <p>
+      Transcribe your ideas like Kevin Hart using AssemblyAI in the <a href="{{ url_for('pages.transcripts') }}">Transcripts Page</a>.
+  </p>
+
+{% endblock content %}

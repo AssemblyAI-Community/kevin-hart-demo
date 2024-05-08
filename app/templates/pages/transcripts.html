@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h2>{% block title %}Transcripts{% endblock title %}</h2>
+{% endblock header %}
+
+{% block content %}
+<body>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.file() }}
+        {{ form.submit() }}
+        <p>{{ upload_status }}</p>
+    </form>
+
+    <div class="container" style="display: flex;">
+        <div class="left-column scrollable">
+            <h2>Uploaded Files</h2>
+            <ul>
+                {% for file in audio_files %}
+                <li>
+                    <div class="file-container">
+                        <p>{{ file }}</p>
+                        <button class="file-button" data-filename="{{ file }}">View File</button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="right-column" style="flex: 2;">
+            <h2>Transcription</h2>
+            <div id="audio-content"></div>
+            <div id="text-content"></div>
+        </div>
+    </div>
+
+    <!-- Plyr CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css">
+    <script src="https://cdn.plyr.io/3.6.8/plyr.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileButtons = document.querySelectorAll('.file-button');
+            const textContentDiv = document.getElementById('text-content');
+            const audioContentDiv = document.getElementById('audio-content');
+
+            fileButtons.forEach(function (button) {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const filename = this.dataset.filename;
+                    fetch(`/file_content/${filename}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.content) {
+                                textContentDiv.textContent = data.content;
+                                const audioUrl = `/serve_audio/${filename}`;
+                                audioContentDiv.innerHTML = `
+                                    <audio controls class="plyr">
+                                        <source src="${audioUrl}" type="audio/wav">
+                                        <source src="${audioUrl}" type="audio/mp3">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                `;
+                            } else {
+                                textContentDiv.textContent = 'No text content available.';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching text content:', error);
+                            textContentDiv.textContent = 'Error fetching text content.';
+                        });
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const players = Array.from(document.querySelectorAll('.plyr')).map(player => new Plyr(player));
+        });
+    </script>
+</body>
+{% endblock content %}
